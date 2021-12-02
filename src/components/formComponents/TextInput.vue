@@ -1,12 +1,13 @@
 <template>
-    <div class="div12">
-    <label style="text-color:red">{{displayName}}</label>
-    <input class="textinpu" type="text"
+    <div class="user-box">
+    
+    <input  type="text"
            :name="name"
            :value="value"
            @input="$emit('input',$event.target.value)"
            :required ="required"
-           :placeholder="placeholder"    >
+           :placeholder="placeholder">
+      <label>{{displayName}}</label>
     </div>
     
 </template>
@@ -14,23 +15,42 @@
 <script>
 export default {
     name: 'textInput',
-  props: ['displayName', 'name', 'placeholder','required']
+  props: ['displayName', 'name', 'placeholder','required', 'value']
 }
 </script>
-<style >
-.textinpu {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 2px 0;
-  display: inline-block;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
+<style scoped>
+.user-box {
+  position: relative;
 }
 
-.div12{
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 5px;
+.user-box input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+  margin-bottom: 15px;
+  border: none;
+  border-bottom: 1px solid rgb(10, 5, 5);
+  outline: none;
+  background: transparent;
 }
+.user-box label {
+  position: absolute;
+  top:0;
+  left: 0;
+  padding: 10px 0;
+  font-size: 16px;
+  color: rgb(20, 11, 11);
+  pointer-events: none;
+  transition: .5s;
+}
+
+.user-box input:focus ~ label,
+.user-box input:valid ~ label {
+  top: -20px;
+  left: 0;
+  color: #090a4b;
+  font-size: 12px;
+}
+
 </style>

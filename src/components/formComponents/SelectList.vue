@@ -1,34 +1,34 @@
 <template>
      <div>
-    <!-- <label>{{displayName}}</label>
+    <label>{{displayName}}</label>
     <select :multiple="multi"
             :value="value"
-            @input="$emit('input',
-           $event.target.value)">
+            @input="$emit('input', $event.target.value)" 
+            :required="required"
+            :label="name"
+            aria-label="erkrlrle"
+            dense
+            >
       <option v-for="option in options"
               :key="option">
         {{option}}
       </option>
-    </select> -->
-    <validation-provider
-        v-slot="{ errors }"
-        name="select"
-        rules="required"
-      >
-        <v-select
-          @input="$emit('input', $event.target.value)"
-          :items="items"
-          :error-messages="errors"
-          :label="displayName"
-          data-vv-name="select"
-          :required="required"
-        ></v-select>
-      </validation-provider>
+    </select>
   </div>
 </template>
 <script>
 export default {
-    name: 'selectList',
-  props: ['multi', 'options', 'name', 'displayName', 'value'],
+    name: 'selectlist',
+  props: ['options', 'name', 'displayName', 'value'],
 }
 </script>
+<style scoped>
+select {
+    font-size: .9rem;
+    padding: 2px 60px;
+  
+     border: none;
+  border-bottom: 1px solid rgb(10, 5, 5);
+}
+
+</style>

@@ -1,17 +1,24 @@
 <template>
-    <v-container fluid class="secondary5 test pa-0">
+    <v-container fluid class="myone test pa-0">
         <v-row class="container-row" no-gutters>
             <v-col cols="3">
                 <Sidebar/>
             </v-col>
             <v-col cols="9">
               <v-container>
-                <v-row class="ma-1"> 
+                <v-row class="ma-1">
+                    <v-col
+                       class="d-flex"
+                       cols="12"
+                       sm="6"
+                     > 
                    <v-select 
                     @change="(selection) => selectionChanged(selection)"
                      :items="documentTypes"
                      label="Select Document Type "
+                     dense
                    >
+                   
                      <template v-slot:item="{ item, attrs, on }">
                        <v-list-item
                          v-bind="attrs"
@@ -24,11 +31,15 @@
                        </v-list-item>
                      </template>
                    </v-select>
-                
+                  </v-col>
                 </v-row>
 
                 <v-row class="ma-1"> 
-                  
+                   <v-col
+                       class="d-flex"
+                       cols="12"
+                       sm="6"
+                     > 
                     <form v-if="dis ==true" @submit.prevent="submit">
                     
                       
@@ -45,11 +56,12 @@
                             <v-btn
                               class="mr-4"
                                type="submit"
-                               :disabled="invalid" 
+                               :disabled="!file" 
                              >
                              submit
                             </v-btn>
                     </form>
+                   </v-col>
                 </v-row>
               </v-container>  
             </v-col>
@@ -61,20 +73,21 @@
 import { defineComponent } from '@vue/composition-api'
 import Sidebar from '@/components/Sidebar.vue'
 import textInput from '@/components/formComponents/TextInput.vue'
-import selectList from '@/components/formComponents/SelectList.vue'
-import numberInput from '@/components/formComponents/NumberInput.vue'
-
+import selectlist from '@/components/formComponents/SelectList.vue'
+import number from '@/components/formComponents/NumberInput.vue'
+import date from '@/components/formComponents/DateInput.vue'
 
 export default defineComponent({
   
     components:{
-        Sidebar, textInput, selectList, numberInput
+        Sidebar, textInput, selectlist, number, date
     },
     data(){
         return{
             dis:false,
-            documentTypes:['Foo','CHARDOO', 'Bar', 'Fizz', 'Buzz'],
-            formJSON:{},
+            documentTypes:[],
+            // documentTypes:[],
+            formJSON:[],
             selected:null,
             previousSelection: [],
             selectedItems: [],
@@ -83,44 +96,16 @@ export default defineComponent({
         }
     },
     methods:{
-                selectionChanged(selection) {
-        
-                 
-             console.log(selection);
-            //     window.axios.get('/documentypes/selection')
-            //     .then((res) =>{
-            //         this.formJSON =  res.data
-            //     })
+        selectionChanged(selection) {
+                window.axios.get('/'+ selection)
+                .then((res) =>{
+                    this.formJSON =  res.data.fields
+                }).then(() =>{
+                 this.dis =true;
+              console.log(this.formJSON)
+                })
+            
               
-              this.formJSON = [{
-                             "displayName" : 'amount Due',
-                             "fieldType": "textInput",
-                             "name": "amountDue",
-                             "required": true,
-                             "placeholder": " enter the amount due"
-                           }, {
-                             "displayName" : 'Compnay Name',
-                             "fieldType": "textInput",
-                             "name": "companyName",
-                             "required": true,
-                             "placeholder": " enter the amount due"
-                           },
-                           {  "displayName" : 'Account Number',
-                             "fieldType": "numberInput",
-                             "name": "accountNumber",
-                             "required": true,
-                             "placeholder": " enter the account number"
-                           },
-                           {
-                              "displayName" : 'User Id ',
-                             "fieldType": "textInput",
-                             "name": "userId",
-                             "required": true,
-                             "placeholder": " enter the amount due"
-                           }
-                           ];
-                           this.dis =true;
-                           console.log(this.formJSON)
       },
       handleFileUpload( ){
         const selectedImage = this.$refs.file.files[0];
@@ -141,7 +126,7 @@ export default defineComponent({
       submit(){
         this.$set(this.formData, 'file', this.file);
         console.log(this.formData)
-        this.formData = {}
+        this.dis = false;
       }
     },
     watch:{
@@ -149,7 +134,7 @@ export default defineComponent({
        
     },
     beforeMount(){
-        window.axios.get('/documentypes')
+        window.axios.get('/')
         .then((res) =>{
             this.documentTypes =  res.data
         })
