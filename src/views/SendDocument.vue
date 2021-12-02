@@ -28,7 +28,8 @@
                 </v-row>
 
                 <v-row class="ma-1"> 
-                    <form @submit.prevent="submit">
+                  
+                    <form v-if="dis ==true" @submit.prevent="submit">
                     
                       
                             <component  v-for="(field, index) in formJSON" 
@@ -44,7 +45,7 @@
                             <v-btn
                               class="mr-4"
                                type="submit"
-                               :disabled="invalid" @click="submitHandler"
+                               :disabled="invalid" 
                              >
                              submit
                             </v-btn>
@@ -71,6 +72,7 @@ export default defineComponent({
     },
     data(){
         return{
+            dis:false,
             documentTypes:['Foo','CHARDOO', 'Bar', 'Fizz', 'Buzz'],
             formJSON:{},
             selected:null,
@@ -117,6 +119,7 @@ export default defineComponent({
                              "placeholder": " enter the amount due"
                            }
                            ];
+                           this.dis =true;
                            console.log(this.formJSON)
       },
       handleFileUpload( ){
@@ -135,9 +138,10 @@ export default defineComponent({
                       
       },
       
-      submitHandler(){
+      submit(){
         this.$set(this.formData, 'file', this.file);
         console.log(this.formData)
+        this.formData = {}
       }
     },
     watch:{
