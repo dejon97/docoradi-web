@@ -102,14 +102,6 @@ export default defineComponent({
     },
     methods:{
         selectionChanged(selection) {
-              //   window.axios.get('/'+ selection)
-              //   .then((res) =>{
-              //       this.formJSON =  res.data.fields
-              //   }).then(() =>{
-              //    this.dis =true;
-              // console.log(this.formJSON)
-              //   })
-              // console.log(selection);
               this.documenTypeData.forEach(element => {
               if(element.name ==  selection){
                   this.propertyTypeName = element.namespace
@@ -143,8 +135,6 @@ export default defineComponent({
       },
       
       submit(){
-        // this.$set(this.formData, 'file', this.file);
-        console.log(this.formData)
          let payload =  {
              "account": {
                 "id": "richCode121@example.com",
@@ -184,7 +174,6 @@ export default defineComponent({
             this.documenTypeData.forEach(element => {
               this.documentTypes.push(element.name)
             });
-            // this.documentTypes =  res.data
         })
     }
 })
