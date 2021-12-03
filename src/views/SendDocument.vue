@@ -76,11 +76,11 @@ import textInput from '@/components/formComponents/TextInput.vue'
 import selectlist from '@/components/formComponents/SelectList.vue'
 import number from '@/components/formComponents/NumberInput.vue'
 import date from '@/components/formComponents/DateInput.vue'
-
+import email from '@/components/formComponents/EmailInput.vue'
 export default defineComponent({
   
     components:{
-        Sidebar, textInput, selectlist, number, date
+        Sidebar, textInput, selectlist, number, date, email
     },
     data(){
         return{

@@ -1,19 +1,21 @@
 <template>
-  <div class="user-box">
+    <div class="user-box">
+    
+    <input  type="email"
+           :name="name"
+           :value="value"
+           @input="$emit('input',$event.target.value)"
+           :required ="required"
+           :placeholder="placeholder">
       <label>{{displayName}}</label>
-    <input type="date"  
-       :name="name"
-       :value="value"
-       @input="$emit('input',$event.target.value)"
-       :required= "required"
-       >
-       
-  </div>
+    </div>
+    
 </template>
+
 <script>
 export default {
-  name: 'date',
-  props: ['displayName',  'name', 'required', 'value']
+    name: 'emailInput',
+  props: ['displayName', 'name', 'placeholder','required', 'value']
 }
 </script>
 <style scoped>
@@ -26,13 +28,13 @@ export default {
   padding: 10px 0;
   font-size: 16px;
   color: rgb(255, 255, 255);
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   border: none;
   border-bottom: 1px solid rgb(10, 5, 5);
   outline: none;
   background: transparent;
 }
-/* .user-box label {
+.user-box label {
   position: absolute;
   top:0;
   left: 0;
@@ -41,7 +43,7 @@ export default {
   color: rgb(20, 11, 11);
   pointer-events: none;
   transition: .5s;
-} */
+}
 
 .user-box input:focus ~ label,
 .user-box input:valid ~ label {
