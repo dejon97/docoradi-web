@@ -1,11 +1,11 @@
 <template>
   <div class="user-box">
    
-    <input type="number"
+    <input type="number" pattern="^[0-9]*$"
            :name="name"
            :value="value"
            @input="$emit('input',
-           $event.target.value)"
+           $event.target.valueAsNumber)"
            :required='required'
            :placeholder="placeholder">
           <label>{{displayName}}</label>

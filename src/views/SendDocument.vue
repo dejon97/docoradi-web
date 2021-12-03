@@ -92,23 +92,41 @@ export default defineComponent({
             previousSelection: [],
             selectedItems: [],
             formData:  {},
-            file:''
+            file:'',
+            documenTypeData:[],
+            mime:'',
+            filename:'',
+            propertyTypeName:'',
+            propertyTypenameSpace:'',
         }
     },
     methods:{
         selectionChanged(selection) {
-                window.axios.get('/'+ selection)
-                .then((res) =>{
-                    this.formJSON =  res.data.fields
-                }).then(() =>{
-                 this.dis =true;
-              console.log(this.formJSON)
-                })
-            
+              //   window.axios.get('/'+ selection)
+              //   .then((res) =>{
+              //       this.formJSON =  res.data.fields
+              //   }).then(() =>{
+              //    this.dis =true;
+              // console.log(this.formJSON)
+              //   })
+              // console.log(selection);
+              this.documenTypeData.forEach(element => {
+              if(element.name ==  selection){
+                  this.propertyTypeName = element.namespace
+                  this.propertyTypeName = element.name
+                  this.formJSON = element.fields
+                  if(this.formJSON != []){
+                      this.dis =true;
+                  }
+                  
+              }
+            });
               
       },
       handleFileUpload( ){
         const selectedImage = this.$refs.file.files[0];
+        this.mime = selectedImage.type;
+        this.filename = selectedImage.name
         this.createfileBase64(selectedImage);
       },
       createfileBase64(fileobject){
@@ -118,15 +136,40 @@ export default defineComponent({
         };
         reader.readAsBinaryString(fileobject);
       },
+
       updateForm(fieldName, value) {
                        this.$set(this.formData, fieldName, value);
                       
       },
       
       submit(){
-        this.$set(this.formData, 'file', this.file);
+        // this.$set(this.formData, 'file', this.file);
         console.log(this.formData)
-        this.dis = false;
+         let payload =  {
+             "account": {
+                "id": "richCode121@example.com",
+                "type": "userId"
+              },
+              "document":{
+                "mime":this.mime,
+                 "filename": this.filename,
+                 "file":this.file
+              },
+              "properties":{
+                "type":{
+                  "name":this.propertyTypeName,
+                  "namespace":this.propertyTypenameSpace
+                },
+                "fields":this.formData
+              }
+         }
+         window.axios.post('/service/docxon/', payload)
+         .then((res)=>{
+           console.log(res)
+           this.dis = false;
+         })
+        
+
       }
     },
     watch:{
@@ -134,9 +177,14 @@ export default defineComponent({
        
     },
     beforeMount(){
-        window.axios.get('/')
+        window.axios.get('/service/documentTypes/')
         .then((res) =>{
-            this.documentTypes =  res.data
+            this.documenTypeData = res.data
+
+            this.documenTypeData.forEach(element => {
+              this.documentTypes.push(element.name)
+            });
+            // this.documentTypes =  res.data
         })
     }
 })
