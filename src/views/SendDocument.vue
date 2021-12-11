@@ -156,6 +156,12 @@ export default defineComponent({
          window.axios.post('/service/docxon/', payload)
          .then((res)=>{
            console.log(res)
+           this.$swal('Success','<strong>you have succefully added a document to the system </strong>', 'OK')
+          //  if(res.data.status == "OK"){
+
+          //    console.log(res)
+            
+          //  }
            this.dis = false;
          })
         

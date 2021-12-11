@@ -4,7 +4,16 @@ import router from './router';
 import vuetify from './plugins/vuetify'
 import axios from 'axios'
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
+
+const options = {
+  confirmButtonColor: '#10092e',
+  cancelButtonColor: '#ff7674',
+};
+
+Vue.use(VueSweetalert2, options);
 
 
 import {BASE_URL} from '../env'
