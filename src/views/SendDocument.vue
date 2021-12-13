@@ -15,21 +15,11 @@
                    <v-select 
                     @change="(selection) => selectionChanged(selection)"
                      :items="documentTypes"
-                     label="Select Document Type "
+                     item-text="description"
+                     item-value="name"
+                     label="Select Document Type"
                      dense
                    >
-                   
-                     <template v-slot:item="{ item, attrs, on }">
-                       <v-list-item
-                         v-bind="attrs"
-                         v-on="on"
-                       >
-                         <v-list-item-title
-                           :id="attrs['aria-labelledby']"
-                           v-text="item"
-                         ></v-list-item-title>
-                       </v-list-item>
-                     </template>
                    </v-select>
                   </v-col>
                 </v-row>
@@ -86,7 +76,6 @@ export default defineComponent({
         return{
             dis:false,
             documentTypes:[],
-            // documentTypes:[],
             formJSON:[],
             selected:null,
             previousSelection: [],
@@ -102,18 +91,17 @@ export default defineComponent({
     },
     methods:{
         selectionChanged(selection) {
-              this.documenTypeData.forEach(element => {
-              if(element.name ==  selection){
-                  this.propertyTypeName = element.namespace
-                  this.propertyTypeName = element.name
-                  this.formJSON = element.fields
-                  if(this.formJSON != []){
-                      this.dis =true;
-                  }
-                  
-              }
-            });
-              
+          alert(selection);
+
+          const docType = this.documentTypes.find(item => item.name == selection);
+
+          this.propertyTypenameSpace = docType.namespace;
+          this.propertyTypeName = docType.name;
+          this.formJSON = docType.fields;
+
+          if (this.formJSON != []) {
+              this.dis = true;
+          }              
       },
       handleFileUpload( ){
         const selectedImage = this.$refs.file.files[0];
@@ -130,29 +118,44 @@ export default defineComponent({
       },
 
       updateForm(fieldName, value) {
-                       this.$set(this.formData, fieldName, value);
-                      
+        this.$set(this.formData, fieldName, value);           
       },
       
-      submit(){
-         let payload =  {
+      submit() {
+
+        // Transform the form items from 
+        // "firstName": "Kevin" to
+        // "name": "firstName",
+        // "value": "Kevin"
+        const fields = [];
+        for (const [key, value] of Object.entries(this.formData)) {
+          fields.push({
+            name: key,
+            value
+          });
+        }
+
+        console.log(JSON.stringify(fields));
+
+         const payload =  {
              "account": {
                 "id": "richCode121@example.com",
                 "type": "userId"
               },
-              "document":{
-                "mime":this.mime,
+              "document": {
+                "mime": this.mime,
                  "filename": this.filename,
-                 "file":this.file
+                 "file": this.file
               },
-              "properties":{
+              "properties": {
                 "type":{
-                  "name":this.propertyTypeName,
-                  "namespace":this.propertyTypenameSpace
+                  "name": this.propertyTypeName,
+                  "namespace": this.propertyTypenameSpace
                 },
-                "fields":this.formData
+                fields
               }
          }
+
          window.axios.post('/service/docxon/', payload)
          .then((res)=>{
            console.log(res)
@@ -161,7 +164,6 @@ export default defineComponent({
            this.dis = false;
          })
         
-
       }
     },
     watch:{
@@ -170,12 +172,10 @@ export default defineComponent({
     },
     beforeMount(){
         window.axios.get('/service/documentTypes/')
-        .then((res) =>{
-            this.documenTypeData = res.data
+        .then((res) => {
+            this.documentTypes = res.data
 
-            this.documenTypeData.forEach(element => {
-              this.documentTypes.push(element.name)
-            });
+            console.log(JSON.stringify(this.documentTypes));
         })
     }
 })
