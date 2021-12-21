@@ -67,6 +67,8 @@ import selectlist from '@/components/formComponents/SelectList.vue'
 import number from '@/components/formComponents/NumberInput.vue'
 import date from '@/components/formComponents/DateInput.vue'
 import email from '@/components/formComponents/EmailInput.vue'
+import {mapState} from 'vuex'
+
 export default defineComponent({
   
     components:{
@@ -75,7 +77,6 @@ export default defineComponent({
     data(){
         return{
             dis:false,
-            documentTypes:[],
             formJSON:[],
             selected:null,
             previousSelection: [],
@@ -90,6 +91,7 @@ export default defineComponent({
         }
     },
     methods:{
+      
         selectionChanged(selection) {
           alert(selection);
 
@@ -103,6 +105,7 @@ export default defineComponent({
               this.dis = true;
           }              
       },
+      
       handleFileUpload( ){
         const selectedImage = this.$refs.file.files[0];
         this.mime = selectedImage.type;
@@ -119,6 +122,9 @@ export default defineComponent({
 
       updateForm(fieldName, value) {
         this.$set(this.formData, fieldName, value);           
+      },
+      created(){
+        this.$store.dispatch('documentType/getProperties')
       },
       
       submit() {
@@ -170,14 +176,32 @@ export default defineComponent({
 
        
     },
-    beforeMount(){
-        window.axios.get('/service/documentTypes/')
-        .then((res) => {
-            this.documentTypes = res.data
+    // computed:{
+    //   documentTypes(){
+    //     return this.$store.state.allproperties;
+    //   }
+    // },
+    //  computed:mapState({documentTypes: state=> state.properties.allproperties}),
+    // beforeMount(){
+    //     window.axios.get('/service/documentTypes/')
+    //     .then((res) => {
+    //       console.log(res.data)
+    //         this.documentTypes = res.data
 
-            console.log(JSON.stringify(this.documentTypes));
-        })
-    }
+    //          console.log(JSON.stringify(this.documentTypes));
+    //     })
+    // }
+
+    //  mounted : mapState({documentTypes: state=> state.properties.allproperties})
+    //  beforeMount(){
+    //     this.$store.dispatch('documentType/getProperties')
+    //  }
+    mounted(){
+       this.$store.dispatch('documentTypes/getProperties');
+    },
+  computed:mapState('documentTypes',{
+    documentTypes: state => state.allproperties
+  })  
 })
 </script>
 
