@@ -12,5 +12,13 @@ export default{
        .then((res) =>  Promise.resolve(res.data)).
        catch((error) => Promise.reject(error)); 
     
-    }
+    },
+
+    senddocument(payload){
+
+        return window.axios.post('/service/docxon/', payload)
+        .then((res) =>  Promise.resolve(res.data)).
+        catch((error) => Promise.reject(error)); 
+     
+     }
 }

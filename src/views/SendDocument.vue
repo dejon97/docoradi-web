@@ -30,7 +30,7 @@
                        cols="12"
                        sm="6"
                      > 
-                    <form v-if="dis ==true" @submit.prevent="submit">
+                    <form v-if="formDisplay ==true" @submit.prevent="submit">
                     
                       
                             <component  v-for="(field, index) in formJSON" 
@@ -76,7 +76,6 @@ export default defineComponent({
     },
     data(){
         return{
-            dis:false,
             formJSON:[],
             selected:null,
             previousSelection: [],
@@ -102,7 +101,7 @@ export default defineComponent({
           this.formJSON = docType.fields;
 
           if (this.formJSON != []) {
-              this.dis = true;
+              this.$store.dispatch('documentTypes/displayform');
           }              
       },
       
@@ -161,13 +160,12 @@ export default defineComponent({
                 fields
               }
          }
-
-         window.axios.post('/service/docxon/', payload)
+          this.$store.dispatch('documentTypes/sendfile', payload)
          .then((res)=>{
            console.log(res)
            this.$swal('Success','<strong>you have succefully added a document to the system </strong>', 'OK')
           
-           this.dis = false;
+           this.$store.commit('documentTypes/setdis', false);
          })
         
       }
@@ -176,31 +174,13 @@ export default defineComponent({
 
        
     },
-    // computed:{
-    //   documentTypes(){
-    //     return this.$store.state.allproperties;
-    //   }
-    // },
-    //  computed:mapState({documentTypes: state=> state.properties.allproperties}),
-    // beforeMount(){
-    //     window.axios.get('/service/documentTypes/')
-    //     .then((res) => {
-    //       console.log(res.data)
-    //         this.documentTypes = res.data
 
-    //          console.log(JSON.stringify(this.documentTypes));
-    //     })
-    // }
-
-    //  mounted : mapState({documentTypes: state=> state.properties.allproperties})
-    //  beforeMount(){
-    //     this.$store.dispatch('documentType/getProperties')
-    //  }
     mounted(){
        this.$store.dispatch('documentTypes/getProperties');
     },
   computed:mapState('documentTypes',{
-    documentTypes: state => state.allproperties
+    documentTypes: state => state.allproperties,
+    formDisplay: state =>  state.formDisplay
   })  
 })
 </script>
