@@ -109,16 +109,33 @@ export default defineComponent({
         const selectedImage = this.$refs.file.files[0];
         this.mime = selectedImage.type;
         this.filename = selectedImage.name
-        this.createfileBase64(selectedImage);
+       // this.createfileBase64(selectedImage);
+        window.URL.createObjectURL(selectedImage);
+        this.getBase64(selectedImage).then(data =>{
+           this.file = data;
+        })
       },
-      createfileBase64(fileobject){
-        const reader = new FileReader();
-        reader.onload =(e)=> {
-          this.file =  e.target.result;
-        };
-        reader.readAsBinaryString(fileobject);
-      },
-
+      // createfileBase64(fileobject){
+      //   const reader = new FileReader();
+      //   reader.onload =(e)=> {
+      //     this.file =  e.target.result;
+      //   };
+      //   reader.readAsBinaryString(fileobject);
+      // },
+     getBase64(file) {
+       return new Promise((resolve, reject) => {
+         const reader = new FileReader();
+         reader.readAsDataURL(file);
+         reader.onload = () => {
+           let encoded = reader.result.toString().replace(/^data:(.*,)?/, '');
+           if ((encoded.length % 4) > 0) {
+             encoded += '='.repeat(4 - (encoded.length % 4));
+           }
+           resolve(encoded);
+         };
+         reader.onerror = error => reject(error);
+       });
+     },
       updateForm(fieldName, value) {
         this.$set(this.formData, fieldName, value);           
       },
@@ -144,14 +161,14 @@ export default defineComponent({
 
          const payload =  {
              "account": {
-                "id": "richCode121@example.com",
+                "id": "appiahrichard1212@gmail.com",
                 "type": "userId"
               },
               "document": {
                 "mime": this.mime,
                  "filename": this.filename,
                  "file": this.file
-              },
+                },
               "properties": {
                 "type":{
                   "name": this.propertyTypeName,
@@ -160,6 +177,8 @@ export default defineComponent({
                 fields
               }
          }
+         console.log("payload is loging")
+           console.log(payload);
           this.$store.dispatch('documentTypes/sendfile', payload)
          .then((res)=>{
            console.log(res)
